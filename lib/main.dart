@@ -2,8 +2,11 @@
 
 import 'dart:async';
 import 'dart:core';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sensors/sensors.dart';
+import 'package:csv/csv.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,7 +32,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double x = 0, y = 0, z = 0;
   double absAcceleration = 0;
-  var absAccelerationList = [];
+
+  List<String> absAccelerationList = <String>[];
 
   StreamSubscription? accel;
   Timer? timer;
@@ -82,7 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
     absAcceleration = absoluteX + absoluteY + absoluteZ;
 
-    absAccelerationList.add(absAcceleration);
+    absAccelerationList.add(absAcceleration.toString());
+  }
+
+  generateCsv() async {
+    //List<String> stringList = absAccelerationList.cast<String>();
+    List<List<String>> data = [
+      absAccelerationList,
+    ];
+    String csvData = ListToCsvConverter().convert(data);
+    String directory = (await getExternalStorageDirectory())!.absolute.path;
+    final path = "$directory/gyroscope_data-${DateTime.now()}.csv";
+    print(path);
+    final File file = File(path);
+    await file.writeAsString(csvData);
   }
 
   @override
@@ -196,6 +213,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: RaisedButton(
                   onPressed: pauseTimer,
                   child: Text('Stop'),
+                  color: Theme.of(context).primaryColor,
+                  textColor: Colors.white,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: RaisedButton(
+                  onPressed: generateCsv,
+                  child: Text('Export CSV'),
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                 ),
