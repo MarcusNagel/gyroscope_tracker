@@ -29,6 +29,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double x = 0, y = 0, z = 0;
   double absAcceleration = 0;
+  var absAccelerationList = [];
 
   StreamSubscription? accel;
   Timer? timer;
@@ -80,6 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
     double absoluteZ = z.abs();
 
     absAcceleration = absoluteX + absoluteY + absoluteZ;
+
+    absAccelerationList.add(absAcceleration);
   }
 
   @override
