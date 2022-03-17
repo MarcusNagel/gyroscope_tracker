@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   StreamSubscription? accel;
   Timer? timer;
-  AccelerometerEvent? event;
+  UserAccelerometerEvent? event;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   startTimer() {
     // if the accelerometer subscription hasn't been created, go ahead and create it
     if (accel == null) {
-      accel = accelerometerEvents.listen((AccelerometerEvent eve) {
+      accel = userAccelerometerEvents.listen((UserAccelerometerEvent eve) {
         setState(() {
           event = eve;
         });
